@@ -1,499 +1,364 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset=utf-8 />
-    <title>Farmer's Markets in Philadelphia</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+	
+	<title>Philadelphia New Housing Permits</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: whitesmoke;
-            font-family: Lato, sans-serif;
-            color: #0D0000;
-        }
-        header {
-            padding: 6px 10%;
-        }
-        h1 {
-            display: inline-block;
-            margin-right: 20px;
-            color: #001323;
-        }
-        h2 {
-            display: inline-block;
-            color: #001323;
-        }
-        #map {
-            width: 80%;
-            height: 700px;
-            margin: 10px auto;
-        }
-        footer {
-            padding: 6px 10%;
-            width: 80%;
-        }
-        p {
-            font-size: 1em;
-            color: #001323;
-        }
-        g{
-            font-size: 1em;
-            color: #61d959;
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+
+
+	<div id= "Style descriptions">
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                background: whitesmoke;
+                font-family: Lato, sans-serif;
+                color: #0D0000;
+            }
+            header {
+                padding: 6px 10%;
+            }
+            h1 {
+                display: inline-block;
+                margin-right: 20px;
+                color: #001323;
+            }
+            h2 {
+                display: inline-block;
+                color: #001323;
+            }
+            #map {
+                width: 40%;
+                height: 600px;
+                margin: 10px auto;
+            }
+
+            footer {
+                padding: 6px 10%;
+                width: 80%;
+            }
+            p {
+                font-size: 1em;
+                color: #001323;
+            }
+            g{
+                font-size: 1em;
+                color: #61d959;
+
+            }
+            r {
+                font-size: 1em;
+                color: #e41b1b;
+            }
+            purp {
+                font-size: 1em;
+                color: #e11be4;
+            }
             
-        }
-        r {
-            font-size: 1em;
-            color: #e41b1b;
-        }
-        purp {
-            font-size: 1em;
-            color: #e11be4;
-        }
-    </style>
+            hr {
+                border-radius: 5px;
+            }
+            
+            #resetButton {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                z-index: 1000;
+                background-color: #fff;
+                border: 1px solid #ccc;
+                padding: 6px 10px;
+                cursor: pointer;
+                font-size: 14px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        </style>
+    </div>
+
+	<div id= "Information for formatting the top-right box describing neighborhood and permit count">
+     <style>
+        .info { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #900; }
+        .legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
+      </style>
+    </div>
 </head>
-
 <body>
-    <header>
-        <h1>Philadelphia Farmer's Markets</h1>
-        <br><h2><em>Alternative Food Sources located throughout the city</em></h2>
-    </header>
+    <div id= "Description at the top of the page">
+        <header>
+            <h1>Philadelphia New Housing Permits</h1>
+            <br> <h2><em>Where in the city is new housing being built?</em></h2>
 
+        </header>
+    </div>
+    <hr>
     <div id='map'></div>
 
-    <footer>
-        <p>Map authored by Jason Berkhimer</p>
-        <p>Click on any circular symbol to display the name of the farmer's market as well as important information such as: address, food stamp acceptance, months of operation, and available bus routes to that location. </p>
-        <p><em>Data acquired from <a href="https://opendataphilly.org/datasets/farmers-markets-locations/" target="_blank">opendataphilly.org</a></em></p>
-        
-    </footer>
-<div class="esriSimpleSliderIncrementButton"><div class="mapCommandHomeBtn"></div></div>
-    <script src="https://cdn.rawgit.com/jberk988/Farmer-s-Markets-in-Philadelphia/main/Farmers_Markets.js"></script>
+  <div id="Footer description"> 
+          <footer>
+            <p>Map authored by Jason Berkhimer</p>
+            <p>Mouse-over any neighborhood to retrieve information regarding the number of new construction permits were added in that year. The menu in the top right is changeable and can be adjusted from 2016-2021. Building permits, in this instance, are defined as those that were either completed, issued, or ready to issue in that year. </p>
+            <p><em>Data acquired from <a href="https://opendataphilly.org/datasets/licenses-and-inspections-building-and-zoning-permits/" target="_blank">opendataphilly.org</a></em></p>
+        </footer>
+  </div>
+    <div id= ".js callbacks">
+        <script src= "https://cdn.rawgit.com/jberk988/New-Housing-Permits-in-Philadelphia/main/Neighborhoods2021%20(2).js"></script>
+        <script src= "https://cdn.rawgit.com/jberk988/New-Housing-Permits-in-Philadelphia/main/Neighborhoods2020.js"></script>
+        <script src= "https://cdn.rawgit.com/jberk988/New-Housing-Permits-in-Philadelphia/main/Neighborhoods2019.js"></script>
+        <script src= "https://cdn.rawgit.com/jberk988/New-Housing-Permits-in-Philadelphia/main/Neighborhoods2018.js"></script>
+        <script src= "https://cdn.rawgit.com/jberk988/New-Housing-Permits-in-Philadelphia/main/Neighborhoods2017.js"></script>
+        <script src= "https://cdn.rawgit.com/jberk988/New-Housing-Permits-in-Philadelphia/main/Neighborhoods2016.js"></script>
+        <script src= "https://cdn.rawgit.com/jberk988/New-Housing-Permits-in-Philadelphia/main/Neighborhoods_Philadelphia.js"></script>
+        <script type="text/javascript"></script>
+    </div>
+    
     <script>
+	var map = L.map('map', {
+          center: [40,-75.15],
+          zoom:10.5
+});
+    
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/light-v9',
+		tileSize: 512,
+		zoomOffset: -1,
+        minZoom:11,
+        maxZoom:14,
+	}).addTo(map);
+
         
-
-      var map = L.map('map', {
-          center: [39.98,-75.17],
-          zoom:11.5,
-      });
-      
-      var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-          subdomains: 'abcd',
-          maxZoom: 15,
-          minZoom: 11,
-          
-      });  
-      
-      tiles.addTo(map);
-        // Set bounds for the map around Philadelphia
-  var bounds = L.latLngBounds([39.86, -75.382], [40.1, -74.955]);
-
-  // Set maxBounds to restrict both panning and zooming
-  map.setMaxBounds(bounds);
-
-  // Add an event listener to adjust the view when the user tries to move outside the bounds
-  map.on('drag', function() {
-    map.panInsideBounds(bounds, { animate: false });
-  });
         
+        
+        
+var twotwoone=L.geoJson(twentyone, {
+            style: (feature) => {
+                  
+    return {
+      stroke: true,
+      color: "#e31a1c",
+      weight: 1,
+      opacity: 0.5,
+      fill: true,
+      fillColor: "#7300e6",
+        dashArray: '',
+      fillOpacity: 0.15,
+      smoothFactor: 0.5,
+      interactive: false,
+        
+    };
+  }
+    
+        }).addTo(map);
+  
+	var info = L.control();
+
+	info.onAdd = function (map) {
+		this._div = L.DomUtil.create('div', 'info');
+		this.update();
+		return this._div;
+	};
+
+	info.update = function (props) {
+		this._div.innerHTML = '<h4>Philadelphia Permit Count</h4>' +  (props ?
+			'<b>' + props.MAPNAME + '</b><br />' + props.Join_Count + ' permits issued or completed'
+			: 'Hover over a neighborhood');
+	};
+
+	info.addTo(map);
+        
+	function getColor(d) {
+		return d > 200 ? '#7a0177' :
+				d > 150  ? '#ae017e' :
+				d > 100  ? '#dd3497' :
+				d > 50  ? '#f768a1' :
+				d > 25   ? '#fa9fb5' :
+				d > 15   ? '#fcc5c0' :
+				d > 5   ? '#fde0dd' :
+							'#bdbdbd';
+	}
+	function style(feature) {
+		return {
+			weight: 2,
+			opacity: 1,
+			color: '#e31a1c',
+			dashArray: '3',
+			fillOpacity: 0.7,
+			fillColor: getColor(feature.properties.Join_Count)
+		};
+	}
+	function highlightFeature(e) {
+		var layer = e.target;
+
+		layer.setStyle({
+			weight: 5,
+			color: '#666',
+			dashArray: '5',
+			fillOpacity: 0.7
+		});
+
+		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+			layer.bringToFront();
+		}
+
+		info.update(layer.feature.properties);
+	}
+
+  
+        
+	function resetHighlight(e) {
+		geojson.resetStyle(e.target);
+		info.update();
+	}
+
+	function zoomToFeature(e) {
+         map.fitBounds(e.target.getBounds());
+         map.setMaxZoom(13);
+	}
+
+	function onEachFeature(feature, layer) {
+		layer.on({
+			mouseover: highlightFeature,
+			mouseout: resetHighlight,
+			click: zoomToFeature
+		});
+	}
+        
+var geojson;
+geojson= L.geoJson(twentyone);
+	geojson = L.geoJson(twentyone, {
+		style: style,
+		onEachFeature: onEachFeature
+	}).addTo(map);
+        var geojson_1;
+geojson_1= L.geoJson(twenty);
+	geojson_1 = L.geoJson(twenty, {
+		style: style,
+		onEachFeature: onEachFeature
+	}).addTo(map);
+        var geojson_2;
+geojson_2= L.geoJson(nineteen);
+	geojson_2 = L.geoJson(nineteen, {
+		style: style,
+		onEachFeature: onEachFeature
+	}).addTo(map);
+        var geojson_3;
+geojson_3= L.geoJson(eighteen);
+	geojson_3 = L.geoJson(eighteen, {
+		style: style,
+		onEachFeature: onEachFeature
+	}).addTo(map);
+var geojson_4;
+geojson_4= L.geoJson(seventeen);
+	geojson_4 = L.geoJson(seventeen, {
+		style: style,
+		onEachFeature: onEachFeature
+	}).addTo(map);
+        var geojson_5;
+geojson_5= L.geoJson(sixteen);
+	geojson_5 = L.geoJson(sixteen, {
+		style: style,
+		onEachFeature: onEachFeature
+	}).addTo(map);
    
-      var MarketsCenter = L.geoJson(farmers, {
-          pointToLayer: function(feature,latlng) {
-              return L.circleMarker(latlng, {
-                 color: 'Purple',
-                 weight: 4,
-                 fillColor: 'yellow',
-                 fillOpacity: 1,
-                 radius: 10
-              });   
-          },
-          
-    filter : function(feature, layer){
-              if(feature.properties.zip==['19103','19123','19130','19102','19146']){
-                  return feature
-              };
-          },
-         
-    onEachFeature : function(feature,layer) {
-    layer.on('mouseover', function() {
-    layer.setStyle({
-        fillColor: 'red'
-    });
-});
-layer.on('mouseout', function() {
-    layer.setStyle({
-        fillColor: 'yellow'
-    });
-});
+	var legend = L.control({position: 'bottomleft'});
 
+	legend.onAdd = function (map) {
+
+		var div = L.DomUtil.create('div', 'info legend'),
+			grades = [0,5,15,25,50,100,150,200],
+			labels = [],
+			from, to;
+
+		for (var i = 0; i < grades.length; i++) {
+			from = grades[i];
+			to = grades[i + 1];
+
+			labels.push(
+				'<i style="background:' + getColor(from + 1) + '"></i> ' +
+				from + (to ? '&ndash;' + to : '+'));
+		}
+
+		div.innerHTML = labels.join('<br>');
+		return div;
+	};
+
+	legend.addTo(map);
+    
+ // Function to handle radio button change
+function handleLayerChange(layer) {
+    map.eachLayer(function (currentLayer) {
+        if (currentLayer !== layer) {
+            map.removeLayer(currentLayer);
+        }
+    });
+
+    layer.addTo(map);
 }
-          
-          
-      }).addTo(map);
-        
-var MarketsCenter = L.geoJson(farmers, {
-    pointToLayer: function (feature, latlng) {
-        console.log("This is a Center City Zip Code");
-        console.log(feature.properties.zip);
-        return L.circleMarker(latlng, {
-            color: 'Purple',
-            weight: 4,
-            fillColor: 'yellow',
-            fillOpacity: 1,
-            radius: 10
-        });
-    },
 
-    filter: function (feature, layer) {
-        // Filter features with specified zip codes
-        return ['19103','19102', '19146', '19107', '19106'].includes(feature.properties.zip);
-    },
+// Create radio button control
+var layerControl = L.control({ position: 'bottomright' });
 
-    onEachFeature: function (feature, layer) {
-        layer.on('mouseover', function () {
-            layer.setStyle({
-                fillColor: 'red'
-            });
-        });
-        layer.on('mouseout', function () {
-            layer.setStyle({
-                fillColor: 'yellow'
-            });
-        });
+layerControl.onAdd = function () {
+    var div = L.DomUtil.create('div', 'info legend'),
+        years = [2021, 2020, 2019, 2018, 2017, 2016],
+        buttons = [];
 
-        var name = feature.properties.name;
-        var capacity = feature.properties.address;
-        var foodstamps = feature.properties.payment_snap;
-        var buslines = feature.properties.transit_bus;
-        var open = feature.properties.season_opening_month;
-        var closed = feature.properties.season_closing_month;
-         var zip = feature.properties.zip;
+    years.forEach(function (year) {
+        var label = '<label><input type="radio" name="year" value="' + year + '">' + year + '</label>';
+        buttons.push(label);
+    });
 
-        // Check for null values and replace with default text
-        open = open ? open : "The farmer's market is open all year long!";
-        closed = closed ? closed : "";
-        buslines = buslines ? buslines : "Bus lines information not available.";
-
-        // Construct "Months of Operation" string
-        var monthsOfOperation = "Months of Operation: " + open;
-        if (closed) {
-            monthsOfOperation += " to " + closed;
+    div.innerHTML = buttons.join('<br>');
+    div.onchange = function (e) {
+        var selectedYear = e.target.value;
+        switch (selectedYear) {
+            case '2021':
+                handleLayerChange(geojson);
+                break;
+            case '2020':
+                handleLayerChange(geojson_1);
+                break;
+            case '2019':
+                handleLayerChange(geojson_2);
+                break;
+            case '2018':
+                handleLayerChange(geojson_3);
+                break;
+            case '2017':
+                handleLayerChange(geojson_4);
+                break;
+            case '2016':
+                handleLayerChange(geojson_5);
+                break;
+            default:
+                break;
         }
+    };
 
-        var popup = ("<b style='color:purple'>" + name + "</b><br>" +
-            "Located at " + capacity + " " + zip +"<br>" + "<br>" + "Do certain vendors accept food stamps? " +
-            "<b>" + foodstamps + "</b><br>" + "<br>" + monthsOfOperation +
-            "<br>" + "Bus Lines: " + buslines);
-        layer.bindPopup(popup);
-    }
-}).addTo(map);
-
-// Create GeoJSON layer for markets in South Philly
-var SouthPhillyMarkets = L.geoJson(farmers, {
-    pointToLayer: function (feature, latlng) {
-        console.log("This is a South Philly Zip Code");
-        console.log(feature.properties.zip);
-        return L.circleMarker(latlng, {
-            color: 'Purple',
-            weight: 2,
-            fillColor: 'yellow',
-            fillOpacity: 0.5,
-            radius: 10
-        });
-    },
-
-    filter: function (feature, layer) {
-        // Filter features with zip codes in South Philly
-        return ['19147','19148'].includes(feature.properties.zip);
-    },
-
-    onEachFeature: function (feature, layer) {
-        layer.on('mouseover', function () {
-            layer.setStyle({
-                fillColor: 'red'
-            });
-        });
-        layer.on('mouseout', function () {
-            layer.setStyle({
-                fillColor: 'yellow'
-            });
-        });
-
-        var name = feature.properties.name;
-        var capacity = feature.properties.address;
-        var foodstamps = feature.properties.payment_snap;
-        var buslines = feature.properties.transit_bus;
-        var open = feature.properties.season_opening_month;
-        var closed = feature.properties.season_closing_month;
-         var zip = feature.properties.zip;
-
-        // Check for null values and replace with default text
-        open = open ? open : "The farmer's market is open all year long!";
-        closed = closed ? closed : "";
-        buslines = buslines ? buslines : "Bus line(s) information not available.";
-
-        // Construct "Months of Operation" string
-        var monthsOfOperation = "Months of Operation: " + open;
-        if (closed) {
-            monthsOfOperation += " to " + closed;
-        }
-
-        var popup = ("<b style='color:purple'>" + name + "</b><br>" +
-            "Located at " + capacity + " " +  zip +"<br>" + "<br>" + "Do certain vendors accept food stamps? " +
-            "<b>" + foodstamps + "</b><br>" + "<br>" + monthsOfOperation +
-            "<br>" + "Bus Routes: " + buslines);
-        layer.bindPopup(popup);
-    }
-}).addTo(map);
-        
-        var WestPhillyMarkets = L.geoJson(farmers, {
-    pointToLayer: function (feature, latlng) {
-        console.log("This is a West Philly Zip Code");
-        console.log(feature.properties.zip);
-        return L.circleMarker(latlng, {
-            color: 'Purple',
-            weight: 2,
-            fillColor: 'yellow',
-            fillOpacity: 0.5,
-            radius: 10
-        });
-    
-    },
-
-    filter: function (feature, layer) {
-        // Filter features with zip codes not in the specified list
-        return ['19104','19139','19151','19143'].includes(feature.properties.zip);
-    },
-
-    onEachFeature: function (feature, layer) {
-        layer.on('mouseover', function () {
-            layer.setStyle({
-                fillColor: 'red'
-            });
-        });
-        layer.on('mouseout', function () {
-            layer.setStyle({
-                fillColor: 'yellow'
-            });
-        });
-
-        var name = feature.properties.name;
-        var capacity = feature.properties.address;
-        var foodstamps = feature.properties.payment_snap;
-        var buslines = feature.properties.transit_bus;
-        var open = feature.properties.season_opening_month;
-        var closed = feature.properties.season_closing_month;
-        var zip = feature.properties.zip;
-
-        // Check for null values and replace with default text
-        open = open ? open : "The farmer's market is open all year long!";
-        closed = closed ? closed : "";
-        buslines = buslines ? buslines : "Bus line(s) information not available.";
-
-        // Construct "Months of Operation" string
-        var monthsOfOperation = "Months of Operation: " + open;
-        if (closed) {
-            monthsOfOperation += " to " + closed;
-        }
-
-        var popup = ("<b style='color:purple'>" + name + "</b><br>" +
-            "Located at " + capacity + " " + zip + "<br>" + "<br>" + "Do certain vendors accept food stamps? " +
-            "<b>" + foodstamps + "</b><br>" + "<br>" + monthsOfOperation +
-            "<br>" + "Bus Routes: " + buslines);
-        layer.bindPopup(popup);
-    }
-}).addTo(map);
-        
-               var NorthPhilly = L.geoJson(farmers, {
-    pointToLayer: function (feature, latlng) {
-        console.log("This is a North philly Zip Code");
-        console.log(feature.properties.zip);
-        return L.circleMarker(latlng, {
-            color: 'Purple',
-            weight: 2,
-            fillColor: 'yellow',
-            fillOpacity: 0.5,
-            radius: 10
-        });
-    
-    },
-
-    filter: function (feature, layer) {
-        // Filter features with zip codes not in the specified list
-        return ['19130','19122','19121','19123','19133','19140'].includes(feature.properties.zip);
-    },
-
-    onEachFeature: function (feature, layer) {
-        layer.on('mouseover', function () {
-            layer.setStyle({
-                fillColor: 'red'
-            });
-        });
-        layer.on('mouseout', function () {
-            layer.setStyle({
-                fillColor: 'yellow'
-            });
-        });
-
-        var name = feature.properties.name;
-        var capacity = feature.properties.address;
-        var foodstamps = feature.properties.payment_snap;
-        var buslines = feature.properties.transit_bus;
-        var open = feature.properties.season_opening_month;
-        var closed = feature.properties.season_closing_month;
-        var zip = feature.properties.zip;
-
-        // Check for null values and replace with default text
-        open = open ? open : "The farmer's market is open all year long!";
-        closed = closed ? closed : "";
-        buslines = buslines ? buslines : "Bus line(s) information not available.";
-
-        // Construct "Months of Operation" string
-        var monthsOfOperation = "Months of Operation: " + open;
-        if (closed) {
-            monthsOfOperation += " to " + closed;
-        }
-
-        var popup = ("<b style='color:purple'>" + name + "</b><br>" +
-            "Located at " + capacity + " " + zip + "<br>" + "<br>" + "Do certain vendors accept food stamps? " +
-            "<b>" + foodstamps + "</b><br>" + "<br>" + monthsOfOperation +
-            "<br>" + "Bus Routes: " + buslines);
-        layer.bindPopup(popup);
-    }
-}).addTo(map);
-        var NEMarkets = L.geoJson(farmers, {
-    pointToLayer: function (feature, latlng) {
-        console.log("This is a NE Philly Zip Code");
-        console.log(feature.properties.zip);
-        return L.circleMarker(latlng, {
-            color: 'Purple',
-            weight: 2,
-            fillColor: 'yellow',
-            fillOpacity: 0.5,
-            radius: 10
-        });
-    },
-
-    filter: function (feature, layer) {
-        // Filter features with zip codes in South Philly
-        return ['19129','19144','19127','19138','19118','19128'].includes(feature.properties.zip);
-    },
-
-    onEachFeature: function (feature, layer) {
-        layer.on('mouseover', function () {
-            layer.setStyle({
-                fillColor: 'red'
-            });
-        });
-        layer.on('mouseout', function () {
-            layer.setStyle({
-                fillColor: 'yellow'
-            });
-        });
-
-        var name = feature.properties.name;
-        var capacity = feature.properties.address;
-        var foodstamps = feature.properties.payment_snap;
-        var buslines = feature.properties.transit_bus;
-        var open = feature.properties.season_opening_month;
-        var closed = feature.properties.season_closing_month;
-         var zip = feature.properties.zip;
-
-        // Check for null values and replace with default text
-        open = open ? open : "The farmer's market is open all year long!";
-        closed = closed ? closed : "";
-        buslines = buslines ? buslines : "Bus line(s) information not available.";
-
-        // Construct "Months of Operation" string
-        var monthsOfOperation = "Months of Operation: " + open;
-        if (closed) {
-            monthsOfOperation += " to " + closed;
-        }
-
-        var popup = ("<b style='color:purple'>" + name + "</b><br>" +
-            "Located at " + capacity + " " +  zip +"<br>" + "<br>" + "Do certain vendors accept food stamps? " +
-            "<b>" + foodstamps + "</b><br>" + "<br>" + monthsOfOperation +
-            "<br>" + "Bus Routes: " + buslines);
-        layer.bindPopup(popup);
-    }
-}).addTo(map);
-        var NWMarkets = L.geoJson(farmers, {
-    pointToLayer: function (feature, latlng) {
-        console.log("This is a NW Philly Zip Code");
-        console.log(feature.properties.zip);
-        return L.circleMarker(latlng, {
-            color: 'Purple',
-            weight: 2,
-            fillColor: 'yellow',
-            fillOpacity: 0.5,
-            radius: 10
-        });
-    },
-
-    filter: function (feature, layer) {
-        // Filter features with zip codes in South Philly
-        return ['19124','19149','19152'].includes(feature.properties.zip);
-    },
-
-    onEachFeature: function (feature, layer) {
-        layer.on('mouseover', function () {
-            layer.setStyle({
-                fillColor: 'red'
-            });
-        });
-        layer.on('mouseout', function () {
-            layer.setStyle({
-                fillColor: 'yellow'
-            });
-        });
-
-        var name = feature.properties.name;
-        var capacity = feature.properties.address;
-        var foodstamps = feature.properties.payment_snap;
-        var buslines = feature.properties.transit_bus;
-        var open = feature.properties.season_opening_month;
-        var closed = feature.properties.season_closing_month;
-         var zip = feature.properties.zip;
-
-        // Check for null values and replace with default text
-        open = open ? open : "The farmer's market is open all year long!";
-        closed = closed ? closed : "";
-        buslines = buslines ? buslines : "Bus line(s) information not available.";
-
-        // Construct "Months of Operation" string
-        var monthsOfOperation = "Months of Operation: " + open;
-        if (closed) {
-            monthsOfOperation += " to " + closed;
-        }
-
-        var popup = ("<b style='color:purple'>" + name + "</b><br>" +
-            "Located at " + capacity + " " +  zip +"<br>" + "<br>" + "Do certain vendors accept food stamps? " +
-            "<b>" + foodstamps + "</b><br>" + "<br>" + monthsOfOperation +
-            "<br>" + "Bus Routes: " + buslines);
-        layer.bindPopup(popup);
-    }
-}).addTo(map);
-// Control layers for selecting between Markets in Center City and Markets Outside of Center City
-var sourceLayers = {
-    "<b style='color:black '>Markets in Center City</b>": MarketsCenter,
-    "<b style='color:black '>Markets in South Philly</b>": SouthPhillyMarkets,
-    "<b style='color:black '>Markets in West Philly</b>":WestPhillyMarkets,
-    "<b style='color:black '>Markets in North Philly</b>":NorthPhilly,
-    "<b style='color:black '>Markets in North East Philly</b>":NEMarkets,
-    "<b style='color:black '>Markets in North West Philly</b>":NWMarkets,
+    return div;
 };
 
-L.control.layers(null, sourceLayers, { collapsed: true }).addTo(map);
+layerControl.addTo(map);
+        
+          
+        function resetMapView() {
+            map.setView([40,-75.15,10.5]); // Set to the default view
+        }
+        document.getElementById('resetButton').onclick = resetMapView;
 
-    </script>
-    
+        
+</script>
+
+
+
 </body>
-
 </html>
